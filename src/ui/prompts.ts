@@ -2,12 +2,12 @@ import * as p from "@clack/prompts";
 import { parseDate } from "../lib/dates.ts";
 import { parseTime, type ParsedTime } from "../lib/hours.ts";
 
-export function unwrap<T>(value: T | symbol): T {
+export function unwrap<T>(value: T): Exclude<T, symbol> {
   if (p.isCancel(value)) {
     p.cancel("Cancelled.");
     process.exit(0);
   }
-  return value as T;
+  return value as Exclude<T, symbol>;
 }
 
 export async function askText(opts: {
