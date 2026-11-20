@@ -6,6 +6,7 @@ import { logCommand } from "./commands/log.ts";
 import { statusCommand } from "./commands/status.ts";
 import { listCommand } from "./commands/list.ts";
 import { editCommand } from "./commands/edit.ts";
+import { invoiceCommand } from "./commands/invoice.ts";
 
 const program = new Command();
 
@@ -52,6 +53,21 @@ program
   .argument("[month]", "2026-11, 11, nov, last")
   .option("--raw", "open the month's JSON file in $EDITOR")
   .action((month, opts) => editCommand(month, { ...opts, client: clientOpt() }));
+
+program
+  .command("invoice")
+  .alias("inv")
+  .description("generate the PDF invoice for a month")
+  .argument("[month]", "2026-11, 11, nov, last (default: the month you're most likely billing)")
+  .option("-y, --yes", "skip prompts; use saved titles and defaults")
+  .option("-n, --number <n>", "invoice number (default: next in sequence)")
+  .option("--date <date>", "invoice date (default: 1st of the next month)")
+  .option("--due <due>", 'due date: 12/15, +15, or "--"')
+  .option("--adjust <amount>", "adjustment amount, negative for a discount")
+  .option("-o, --out <dir>", "output folder (default: ~/.zynvoice/invoices/<client>)")
+  .option("--html", "write an HTML preview instead of a PDF")
+  .option("--no-open", "don't open the file when done")
+  .action((month, opts) => invoiceCommand(month, { ...opts, client: clientOpt() }));
 
 program.parseAsync().catch((err) => {
   if (err instanceof ZynError) {
