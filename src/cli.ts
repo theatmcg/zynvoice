@@ -7,6 +7,14 @@ import { statusCommand } from "./commands/status.ts";
 import { listCommand } from "./commands/list.ts";
 import { editCommand } from "./commands/edit.ts";
 import { invoiceCommand } from "./commands/invoice.ts";
+import {
+  clientAddCommand,
+  clientBillAsCommand,
+  clientEditCommand,
+  clientListCommand,
+  clientUseCommand,
+} from "./commands/client.ts";
+import { profileAddCommand, profileEditCommand, profileListCommand } from "./commands/profile.ts";
 
 const program = new Command();
 
@@ -68,6 +76,23 @@ program
   .option("--html", "write an HTML preview instead of a PDF")
   .option("--no-open", "don't open the file when done")
   .action((month, opts) => invoiceCommand(month, { ...opts, client: clientOpt() }));
+
+const client = program.command("client").description("clients you invoice (templates for billing other people)");
+client.command("list", { isDefault: true }).alias("ls").description("list clients").action(() => clientListCommand());
+client.command("add").argument("[key]").description("add a client").action((key) => clientAddCommand(key));
+client.command("edit").argument("[key]").description("edit a client (default: the default client)").action((key) => clientEditCommand(key));
+client.command("use").argument("<key>").description("set the default client").action((key) => clientUseCommand(key));
+client
+  .command("bill-as")
+  .argument("<client>")
+  .argument("<profile>")
+  .description("switch which sender profile a client is billed from")
+  .action((key, profile) => clientBillAsCommand(key, profile));
+
+const profile = program.command("profile").description("who invoices are from (name, address, phone)");
+profile.command("list", { isDefault: true }).alias("ls").description("list sender profiles").action(() => profileListCommand());
+profile.command("add").argument("[key]").description("add a sender profile").action((key) => profileAddCommand(key));
+profile.command("edit").argument("[key]").description("edit a sender profile").action((key) => profileEditCommand(key));
 
 program.parseAsync().catch((err) => {
   if (err instanceof ZynError) {
