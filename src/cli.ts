@@ -4,6 +4,8 @@ import { ZynError } from "./lib/store.ts";
 import { initCommand } from "./commands/init.ts";
 import { logCommand } from "./commands/log.ts";
 import { statusCommand } from "./commands/status.ts";
+import { listCommand } from "./commands/list.ts";
+import { editCommand } from "./commands/edit.ts";
 
 const program = new Command();
 
@@ -36,6 +38,20 @@ program
   .description("dashboard of hours and income for a month (default: this month)")
   .argument("[month]", "2026-11, 11, nov, last")
   .action((month) => statusCommand(month, { client: clientOpt() }));
+
+program
+  .command("list")
+  .alias("ls")
+  .description("table of every entry in a month")
+  .argument("[month]", "2026-11, 11, nov, last")
+  .action((month) => listCommand(month, { client: clientOpt() }));
+
+program
+  .command("edit")
+  .description("edit, duplicate, delete, or add entries and period titles")
+  .argument("[month]", "2026-11, 11, nov, last")
+  .option("--raw", "open the month's JSON file in $EDITOR")
+  .action((month, opts) => editCommand(month, { ...opts, client: clientOpt() }));
 
 program.parseAsync().catch((err) => {
   if (err instanceof ZynError) {
