@@ -3,6 +3,7 @@ import chalk from "chalk";
 import { ZynError } from "./lib/store.ts";
 import { initCommand } from "./commands/init.ts";
 import { logCommand } from "./commands/log.ts";
+import { statusCommand } from "./commands/status.ts";
 
 const program = new Command();
 
@@ -28,6 +29,13 @@ program
   .option("-a, --area <area>", "area (substring match, e.g. backend)")
   .option("-d, --date <date>", "today, yesterday, 11/3, 2026-11-03, mon", "today")
   .action((time, task, opts) => logCommand(time, task, { ...opts, client: clientOpt() }));
+
+program
+  .command("status", { isDefault: true })
+  .alias("s")
+  .description("dashboard of hours and income for a month (default: this month)")
+  .argument("[month]", "2026-11, 11, nov, last")
+  .action((month) => statusCommand(month, { client: clientOpt() }));
 
 program.parseAsync().catch((err) => {
   if (err instanceof ZynError) {

@@ -118,6 +118,27 @@ export function updateEntry(client: string, fromMonth: string, entry: Entry): vo
   saveMonth(client, to);
 }
 
+export interface InvoiceRecord {
+  month: string;
+  number: number;
+  date: string;
+  total: number;
+  totalLabel: string;
+  pdf: string;
+}
+
+/** Snapshots written next to each generated PDF, oldest first. */
+export function listInvoices(client: string): InvoiceRecord[] {
+  const dir = paths.invoices(client);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as InvoiceRecord)
+    .filter((r) => r && r.month && r.number)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.number - b.number);
+}
+
 export function deleteEntry(client: string, month: string, id: string): void {
   const log = loadMonth(client, month);
   log.entries = log.entries.filter((e) => e.id !== id);
