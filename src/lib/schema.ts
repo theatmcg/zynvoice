@@ -44,8 +44,16 @@ export const ClientSchema = z.object({
   git: GitConfigSchema.optional(),
 });
 
+export const DisplaySchema = z.object({
+  /** Slot-machine count-up on the dashboard. */
+  animate: z.boolean().default(true),
+});
+
 export const ConfigSchema = z.object({
   defaultClient: z.string().optional(),
+  /** Monthly salary, added to the dashboard with `zyn -s`. */
+  salary: z.number().nonnegative().optional(),
+  display: DisplaySchema.default({ animate: true }),
   profiles: z.record(z.string(), ProfileSchema).default({}),
   clients: z.record(z.string(), ClientSchema).default({}),
 });
@@ -69,6 +77,7 @@ export const MonthLogSchema = z.object({
 
 export type GitRepo = z.infer<typeof GitRepoSchema>;
 export type GitConfig = z.infer<typeof GitConfigSchema>;
+export type Display = z.infer<typeof DisplaySchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
 export type Client = z.infer<typeof ClientSchema>;
 export type Config = z.infer<typeof ConfigSchema>;

@@ -4,8 +4,9 @@ import { daysInMonth, monthLabel, shortDate, today } from "../lib/dates.ts";
 import { formatHours, roundHours } from "../lib/hours.ts";
 import { money, rateLabel } from "../lib/money.ts";
 import { summarizePeriods, totalHours } from "../lib/periods.ts";
-import type { Client, Entry } from "../lib/schema.ts";
+import type { Client, Display, Entry } from "../lib/schema.ts";
 import { bigText } from "./bigtext.ts";
+import { slotFrame } from "./slot.ts";
 import { bar, box, c, padEnd, padStart, truncate } from "./theme.ts";
 
 export interface DashboardInput {
@@ -14,9 +15,13 @@ export interface DashboardInput {
   entries: Entry[];
   prevMonthHours?: number;
   invoiceNote?: string;
+  /** Monthly salary to add on top of invoice earnings. */
+  salary?: number;
+  display?: Display;
 }
 
 const WIDTH = 66;
+const WIDTH_SALARY = 72;
 const BAR = 24;
 
 function heat(hours: number): (s: string) => string {
@@ -30,27 +35,44 @@ function section(title: string): string {
   return `\n  ${chalk.bold.hex("#9D8CFF")(title)}`;
 }
 
-export function renderDashboard({ client, month, entries, prevMonthHours, invoiceNote }: DashboardInput): string {
+export function renderDashboard(input: DashboardInput): string {
+  return renderHeader(input) + "\n" + renderBody(input);
+}
+
+/** The summary box. `t` < 1 renders a slot-machine frame of the count-up. */
+export function renderHeader(input: DashboardInput, t = 1): string {
+  const { client, month, entries, prevMonthHours, invoiceNote, salary } = input;
   const rate = client.rate;
   const hours = totalHours(entries);
   const earned = hours * rate;
+  const total = earned + (salary ?? 0);
   const now = today();
   const isCurrent = now.format("YYYY-MM") === month;
   const days = new Set(entries.map((e) => e.date));
-  const out: string[] = [];
+  const f = slotFrame(t);
+  const rollMoney = (n: number) => f.roll(money(n), n);
+  const rollHours = (n: number) => f.roll(formatHours(n), roundHours(n));
 
-  const big = bigText(money(earned)).map((row) => chalk.greenBright(row));
-  const stats = [
-    `${c.label("EARNED")} ${c.money(earned)}`,
-    `${c.label("HOURS")} ${c.hours(hours)}`,
-    `${c.label("RATE")} ${chalk.white(rateLabel(rate))}`,
-  ].join(c.dim("   │   "));
+  const big = bigText(rollMoney(total).replace("$", ""), (s) => chalk.greenBright(s));
+  const sep = c.dim(salary !== undefined ? "  │  " : "   │   ");
+  const stats =
+    salary !== undefined
+      ? [
+          `${c.label("INVOICE")} ${chalk.greenBright.bold(rollMoney(earned))}`,
+          `${c.label("SALARY")} ${chalk.greenBright.bold(rollMoney(salary))}`,
+          `${c.label("HOURS")} ${chalk.cyanBright(rollHours(hours))} ${c.dim("@")} ${chalk.white(rateLabel(rate))}`,
+        ].join(sep)
+      : [
+          `${c.label("EARNED")} ${chalk.greenBright.bold(rollMoney(earned))}`,
+          `${c.label("HOURS")} ${chalk.cyanBright(rollHours(hours))}`,
+          `${c.label("RATE")} ${chalk.white(rateLabel(rate))}`,
+        ].join(sep);
 
   const facts: string[] = [`${days.size} ${days.size === 1 ? "day" : "days"} worked`];
   if (days.size) facts.push(`${formatHours(hours / days.size)} avg/day`);
   if (isCurrent && hours > 0) {
-    const projected = (hours / now.date()) * daysInMonth(month);
-    facts.push(`on pace for ${c.moneySoft(projected * rate)}`);
+    const projected = (hours / now.date()) * daysInMonth(month) * rate;
+    facts.push(`on pace for ${c.moneySoft(projected)}${salary !== undefined ? ` + salary = ${c.moneySoft(projected + salary)}` : ""}`);
   }
   const lines = ["", ...big, "", stats, c.dim(facts.join(" · "))];
   if (prevMonthHours !== undefined && prevMonthHours > 0) {
@@ -61,10 +83,19 @@ export function renderDashboard({ client, month, entries, prevMonthHours, invoic
   }
   if (invoiceNote) lines.push(chalk.hex("#F50991")(invoiceNote));
   lines.push("");
-  out.push(box(lines, { title: `${chalk.bold(client.name)} ${c.dim("·")} ${chalk.white(monthLabel(month))}`, width: WIDTH }));
+  const title = `${chalk.bold(client.name)} ${c.dim("·")} ${chalk.white(monthLabel(month))}${salary !== undefined ? c.dim(" · with salary") : ""}`;
+  return box(lines, { title, width: salary !== undefined ? WIDTH_SALARY : WIDTH });
+}
+
+export function renderBody({ client, month, entries }: DashboardInput): string {
+  const rate = client.rate;
+  const hours = totalHours(entries);
+  const now = today();
+  const isCurrent = now.format("YYYY-MM") === month;
+  const out: string[] = [];
 
   if (!entries.length) {
-    out.push(c.dim(`\n  No hours logged yet. Add some with "zyn log".`));
+    out.push(c.dim(`  No hours logged yet. Add some with "zyn log".`));
     return out.join("\n") + "\n";
   }
 

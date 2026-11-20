@@ -1,7 +1,9 @@
 import * as p from "@clack/prompts";
 import { configExists, loadConfig, paths, saveConfig } from "../lib/store.ts";
-import type { Client, Config, Profile } from "../lib/schema.ts";
+import { ConfigSchema, type Client, type Config, type Profile } from "../lib/schema.ts";
 import { askLines, askText, unwrap } from "../ui/prompts.ts";
+
+export const DEFAULT_SALARY = 6000;
 
 export const ONESOURCE_PROFILE: Profile = {
   name: "OneSource, LLC",
@@ -25,7 +27,7 @@ export const DEFAULT_ONFIRE: Client = {
 };
 
 export async function initCommand(opts: { yes?: boolean }): Promise<void> {
-  const config: Config = configExists() ? loadConfig() : { profiles: {}, clients: {} };
+  const config: Config = configExists() ? loadConfig() : ConfigSchema.parse({});
   const existingMe = config.profiles.aiden;
   const existingClient = config.clients.onfire;
 
@@ -34,6 +36,7 @@ export async function initCommand(opts: { yes?: boolean }): Promise<void> {
     config.profiles.onesource ??= ONESOURCE_PROFILE;
     config.clients.onfire ??= DEFAULT_ONFIRE;
     config.defaultClient ??= "onfire";
+    config.salary ??= DEFAULT_SALARY;
     saveConfig(config);
     console.log(`Wrote ${paths.config()}`);
     return;
@@ -63,6 +66,12 @@ export async function initCommand(opts: { yes?: boolean }): Promise<void> {
     validate: (v) => (/^\d+$/.test(v) ? undefined : "Whole number"),
   });
   const billTo = await askLines("Invoice for", base.billTo);
+  const salary = await askText({
+    message: 'Monthly salary (shown with "zyn -s")',
+    initialValue: String(config.salary ?? DEFAULT_SALARY),
+    validate: (v) => (v === "" || Number(v) >= 0 ? undefined : "Enter an amount, or leave blank"),
+  });
+  config.salary = salary === "" ? undefined : Number(salary);
 
   config.profiles.aiden = me;
   config.profiles.onesource ??= ONESOURCE_PROFILE;

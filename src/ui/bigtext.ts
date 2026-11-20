@@ -10,16 +10,15 @@ const GLYPHS: Record<string, string[]> = {
   "7": ["111", "001", "001", "001", "001"],
   "8": ["111", "101", "111", "101", "111"],
   "9": ["111", "101", "111", "001", "111"],
-  $: ["011", "110", "010", "011", "110"],
   ",": ["0", "0", "0", "1", "1"],
   ".": ["0", "0", "0", "0", "1"],
-  h: ["100", "100", "111", "101", "101"],
+  "-": ["000", "000", "111", "000", "000"],
   " ": ["0", "0", "0", "0", "0"],
 };
 
 const HALF: Record<string, string> = { "11": "█", "10": "▀", "01": "▄", "00": " " };
 
-export function bigText(text: string): string[] {
+export function bigText(text: string, color: (s: string) => string = (s) => s): string[] {
   const rows = ["", "", ""];
   [...text].forEach((ch, i) => {
     const g = GLYPHS[ch] ?? GLYPHS[" "];
@@ -27,7 +26,7 @@ export function bigText(text: string): string[] {
     for (let r = 0; r < 3; r++) {
       let line = "";
       for (let x = 0; x < g[0].length; x++) line += HALF[px[r * 2][x] + px[r * 2 + 1][x]];
-      rows[r] += (i ? " " : "") + line;
+      rows[r] += (i ? " " : "") + color(line);
     }
   });
   return rows;

@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { ZynError } from "./lib/store.ts";
 import { initCommand } from "./commands/init.ts";
 import { logCommand } from "./commands/log.ts";
-import { statusCommand } from "./commands/status.ts";
+import { salaryCommand, statusCommand } from "./commands/status.ts";
 import { listCommand } from "./commands/list.ts";
 import { editCommand } from "./commands/edit.ts";
 import { invoiceCommand } from "./commands/invoice.ts";
@@ -16,14 +16,25 @@ import {
 } from "./commands/client.ts";
 import { profileAddCommand, profileEditCommand, profileListCommand } from "./commands/profile.ts";
 
+process.stdout.on("error", (err: NodeJS.ErrnoException) => {
+  if (err.code === "EPIPE") process.exit(0);
+  throw err;
+});
+
 const program = new Command();
 
 program
   .name("zyn")
   .description("Log hours, track monthly income, and generate PDF invoices.")
-  .option("-c, --client <key>", "client to use (defaults to config.defaultClient)");
+  .option("-c, --client <key>", "client to use (defaults to config.defaultClient)")
+  .option("-s, --salary", 'add your monthly salary to the dashboard (set it with "zyn salary")')
+  .option("--no-anim", "skip the dashboard count-up animation");
 
 const clientOpt = () => program.opts<{ client?: string }>().client;
+const statusOpts = () => {
+  const o = program.opts<{ client?: string; salary?: boolean; anim?: boolean }>();
+  return { client: o.client, salary: o.salary, anim: o.anim };
+};
 
 program
   .command("init")
@@ -46,7 +57,13 @@ program
   .alias("s")
   .description("dashboard of hours and income for a month (default: this month)")
   .argument("[month]", "2026-11, 11, nov, last")
-  .action((month) => statusCommand(month, { client: clientOpt() }));
+  .action((month) => statusCommand(month, statusOpts()));
+
+program
+  .command("salary")
+  .description("show or set your monthly salary, used by zyn -s")
+  .argument("[amount]", "e.g. 6000")
+  .action((amount) => salaryCommand(amount));
 
 program
   .command("list")
