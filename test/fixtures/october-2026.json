@@ -1,0 +1,25 @@
+{
+  "month": "2026-10",
+  "periodTitles": {
+    "1-10": "Guardian Progress, Quiz Recovery + Regional Support",
+    "11-20": "MINEDUC Report Reliability + Prepared Reporting",
+    "21-31": "MINEDUC Backfill, Recovery + Reporting Coverage"
+  },
+  "entries": [
+    { "id": "oct01", "date": "2026-10-01", "hours": 7, "area": "spark-lms (Backend / Mobile Backend)", "task": "Corrected Home School Guardian student selection and enrollment checks so course progress and grading links use the intended learner (OLMS-258)." },
+    { "id": "oct02", "date": "2026-10-02", "hours": 6, "area": "spark-lms (Backend / Mobile Backend)", "task": "Preserved calculated quiz attempts with missing answer formulas and routed incomplete answer keys to teacher grading without discarding saved responses (OLMS-260)." },
+    { "id": "oct03", "date": "2026-10-05", "hours": 6, "area": "spark-lms (Backend / Mobile Backend)", "task": "Implemented Guatemala-specific support-form routing and added regional delivery regression coverage (OLMS-219)." },
+    { "id": "oct04", "date": "2026-10-06", "hours": 5, "area": "spark-lms (Backend / Mobile Backend)", "task": "Added disposable student and teacher fixtures for returned-assignment PDF retry verification (OLMS-263)." },
+    { "id": "oct05", "date": "2026-10-07", "hours": 5, "area": "spark-lms (Web Frontend)", "task": "Added learner selection and pending-grading labels to guardian course pages, and corrected Guatemala support email links." },
+    { "id": "oct06", "date": "2026-10-09", "hours": 6, "area": "onfire-learning-app (Mobile)", "task": "Added replacement-PDF, picker-cancellation and interrupted-upload scenarios, plus a device verification kit for returned assignment retries (OLMS-263)." },
+    { "id": "oct07", "date": "2026-10-12", "hours": 20, "area": "spark-lms (Backend / Mobile Backend)", "task": "Protected active MINEDUC report workers from premature timeout and added controlled queue-manager recycling (OLMS-271)." },
+    { "id": "oct08", "date": "2026-10-14", "hours": 16, "area": "spark-lms (Backend / Mobile Backend)", "task": "Added optional deferred translation-cache cleanup with a separate cleanup command, progress reporting and failure handling." },
+    { "id": "oct09", "date": "2026-10-15", "hours": 24, "area": "spark-lms (Backend / Mobile Backend)", "task": "Implemented reusable reporting activity tables, resumable ingestion and prepared activity calculations while preserving report permissions, metrics, saved views and CSV behavior." },
+    { "id": "oct10", "date": "2026-10-17", "hours": 18, "area": "spark-lms (Backend / Mobile Backend)", "task": "Added coverage-aware report scheduling, preparation cutoffs, snapshot progress and isolated regression and performance checks." },
+    { "id": "oct11", "date": "2026-10-19", "hours": 10, "area": "spark-lms (Web Frontend)", "task": "Added preparation-stage, progress and data-freshness indicators within the existing MINEDUC saved-report interface." },
+    { "id": "oct12", "date": "2026-10-21", "hours": 14, "area": "spark-lms (Backend / Mobile Backend)", "task": "Refined reporting backfill to resume a fixed year of history, newest first, while prioritizing live arrivals and requested missing ranges." },
+    { "id": "oct13", "date": "2026-10-23", "hours": 12, "area": "spark-lms (Backend / Mobile Backend)", "task": "Separated ingestion from report scheduling and added pause/resume, durable batch progress, independent cron support and deduplicated coverage requests." },
+    { "id": "oct14", "date": "2026-10-27", "hours": 14, "area": "spark-lms (Backend / Mobile Backend)", "task": "Corrected live-source discovery, historical UTC boundary coverage and recovery so ready reports can proceed while unrelated older aggregates remain pending." },
+    { "id": "oct15", "date": "2026-10-30", "hours": 10, "area": "spark-lms (Backend / Mobile Backend)", "task": "Expanded scanner, queue and report regression coverage for recovery, incomplete ranges and current login-confirmation behavior." }
+  ]
+}
