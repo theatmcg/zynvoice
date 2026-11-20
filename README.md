@@ -25,7 +25,26 @@ zyn edit                                      # pick an entry to edit, duplicate
 zyn edit --raw                                # edit the month's JSON in $EDITOR
 ```
 
+The dashboard counts up like a slot machine for 1.5 seconds. Use `--no-anim` to skip it, or set `"display": { "animate": false }` in the config to turn it off.
+
+```sh
+zyn -s                 # include your monthly salary in the total
+zyn salary 6000        # set or change the salary
+```
+
 Times can be ranges (`10:30am-11:45am`, `6:25pm-7:26`, `9-11:30pm`) or durations (`1.5`, `2h`, `1h15m`, `90m`). Dates accept `today`, `yesterday`, `11/3`, `2026-11-03`, `7` (day of this month), or a weekday such as `mon`. `-a` matches an area by name, so `backend`, `web` and `mobile` are enough.
+
+## Git suggestions
+
+When you pick a date in `zyn log`, zyn lists the branches you committed to that day, plus other branches from the week before. Picking one prefills the task from the commit messages, for example `Add bulk outline endpoint (OLMS-267)`, and picks the area from the folders the commits touched. The time prompt shows the span of that day's commits.
+
+```sh
+zyn git                # your branches over the last 14 days, flagging days with commits but no logged hours
+zyn git --days 30
+zyn git setup          # repo folders, author emails, and folder-to-area rules
+```
+
+`zyn init` sets this up for spark-lms automatically when `~/Developer/spark-lms` exists. Commits count as yours when their author email is in `git.authors`, which defaults to the identities used in that clone. Repos are fetched in the background at most every 20 minutes. If a fetch fails, zyn uses the local branches.
 
 ## Invoicing
 
