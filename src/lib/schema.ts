@@ -9,6 +9,24 @@ export const ProfileSchema = z.object({
   paymentNotes: z.array(z.string()).default([]),
 });
 
+export const GitRepoSchema = z.object({
+  path: z.string().min(1),
+  name: z.string().optional(),
+  /** Area for commits that don't match any rule. */
+  defaultArea: z.string().optional(),
+  /** First rule whose path prefixes cover most of a commit's files decides its area. */
+  areaRules: z.array(z.object({ area: z.string(), paths: z.array(z.string()).min(1) })).default([]),
+});
+
+export const GitConfigSchema = z.object({
+  /** Author emails (or name substrings) that count as your work. */
+  authors: z.array(z.string()).default([]),
+  /** Run `git fetch` before suggesting, at most every `fetchEveryMinutes`. */
+  fetch: z.boolean().default(true),
+  fetchEveryMinutes: z.number().nonnegative().default(20),
+  repos: z.array(GitRepoSchema).default([]),
+});
+
 export const ClientSchema = z.object({
   name: z.string().min(1),
   profile: z.string().min(1),
@@ -23,6 +41,7 @@ export const ClientSchema = z.object({
   nextInvoiceNumber: z.number().int().positive().default(1),
   /** Days after the invoice date the payment is due. Null prints "--". */
   dueDays: z.number().int().nonnegative().nullable().default(null),
+  git: GitConfigSchema.optional(),
 });
 
 export const ConfigSchema = z.object({
@@ -48,6 +67,8 @@ export const MonthLogSchema = z.object({
   periodTitles: z.record(z.string(), z.string()).default({}),
 });
 
+export type GitRepo = z.infer<typeof GitRepoSchema>;
+export type GitConfig = z.infer<typeof GitConfigSchema>;
 export type Profile = z.infer<typeof ProfileSchema>;
 export type Client = z.infer<typeof ClientSchema>;
 export type Config = z.infer<typeof ConfigSchema>;

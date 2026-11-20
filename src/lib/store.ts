@@ -23,6 +23,7 @@ export const paths = {
   config: () => path.join(homeDir(), "config.json"),
   monthLog: (client: string, month: string) => path.join(homeDir(), "logs", client, `${month}.json`),
   invoices: (client: string) => path.join(homeDir(), "invoices", client),
+  gitCache: () => path.join(homeDir(), "cache", "git-fetch.json"),
 };
 
 function readJson<T>(file: string, schema: z.ZodType<T>): T {
