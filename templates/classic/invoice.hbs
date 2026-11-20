@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{sender.name}} · Invoice {{number}}</title>
+<style>
+{{{fontCss}}}
+{{{css}}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar"></div>
+
+  <header class="sender">
+    <div class="sender-name">{{sender.name}}</div>
+    {{#each sender.address}}<div class="small">{{this}}</div>{{/each}}
+    {{#if sender.phone}}<div class="small">{{sender.phone}}</div>{{/if}}
+    {{#if sender.email}}<div class="small">{{sender.email}}</div>{{/if}}
+  </header>
+
+  <h1 class="title">Invoice</h1>
+  <div class="date">{{dateLabel}}</div>
+
+  <section class="meta">
+    <div class="meta-col">
+      <div class="label">Invoice for</div>
+      {{#each billTo}}<div class="value">{{this}}</div>{{/each}}
+    </div>
+    <div class="meta-col">
+      <div class="label">Payable to</div>
+      <div class="value">{{sender.name}}</div>
+      {{#each sender.paymentNotes}}<div class="value">{{this}}</div>{{/each}}
+      {{#if project}}
+      <div class="label second">Project</div>
+      <div class="value">{{project}}</div>
+      {{/if}}
+    </div>
+    <div class="meta-col">
+      <div class="label">Invoice #</div>
+      <div class="value">{{number}}</div>
+      <div class="label second">Due date</div>
+      <div class="value">{{dueLabel}}</div>
+    </div>
+  </section>
+
+  <section class="summary">
+    <div class="summary-row shaded">
+      <div class="s-label">Total qty (hrs)</div>
+      <div class="s-value">{{totals.qty}}</div>
+      <div class="s-label">Subtotal</div>
+      <div class="s-value">{{totals.subtotal}}</div>
+      <div></div>
+    </div>
+    <div class="summary-row">
+      <div></div>
+      <div></div>
+      <div class="s-label">Adjustments</div>
+      <div class="s-value">{{totals.adjustments}}</div>
+      <div></div>
+    </div>
+    <div class="grand-total">{{totals.total}}</div>
+  </section>
+
+  <p class="thanks">Thank you for your business!</p>
+  <hr class="divider">
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th class="desc">Description</th>
+        <th class="num qty">Qty</th>
+        <th class="num unit">Unit price</th>
+        <th class="num total">Total price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td class="desc">
+          <div class="item-title">{{title}}</div>
+          {{#each groups}}
+          <div class="area{{#if @first}} first{{/if}}">{{area}}:</div>
+          {{#each tasks}}<div class="task">• {{this}}</div>{{/each}}
+          {{/each}}
+        </td>
+        <td class="num qty">{{qty}}</td>
+        <td class="num unit">{{unitPrice}}</td>
+        <td class="num total">{{total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <p class="thanks end">Thank you for your business!</p>
+</div>
+</body>
+</html>

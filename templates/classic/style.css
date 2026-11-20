@@ -1,0 +1,241 @@
+/* Letter page with 0.5in margins leaves a 720px x 960px content frame. */
+@page {
+  size: Letter;
+  margin: 0.5in;
+}
+
+:root {
+  --navy: #2e3293;
+  --purple: #7663ff;
+  --pink: #f50991;
+  --label: #454545;
+  --muted: #646464;
+  --ink: #080808;
+  --shade: #f2f2f2;
+  --rule: #bcbcbc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  width: 720px;
+  padding: 0 17px 0 47px;
+}
+
+.topbar {
+  height: 16px;
+  margin: 22px 0 0 -30px;
+  background: var(--navy);
+}
+
+.sender {
+  margin-top: 19px;
+}
+
+.sender-name {
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--purple);
+  margin-bottom: 5px;
+}
+
+.small {
+  font-size: 9px;
+  line-height: 15px;
+  color: var(--muted);
+}
+
+.title {
+  margin: 23px 0 0;
+  font-size: 33px;
+  line-height: 40px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.date {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--pink);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 188px 260px 1fr;
+  margin-top: 18px;
+}
+
+.label {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--label);
+  margin-bottom: 5px;
+}
+
+.label.second {
+  margin-top: 17px;
+}
+
+.value {
+  font-size: 9px;
+  line-height: 17px;
+  color: var(--muted);
+}
+
+.summary {
+  margin-top: 4px;
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: 423px 38px 95px 74px 1fr;
+  height: 24px;
+  line-height: 24px;
+  font-size: 9px;
+}
+
+.summary-row.shaded {
+  background: var(--shade);
+}
+
+.s-label,
+.s-value {
+  text-align: right;
+  padding-right: 4px;
+  white-space: nowrap;
+}
+
+.s-label {
+  color: var(--navy);
+}
+
+.s-value {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.grand-total {
+  margin-top: 4px;
+  height: 41px;
+  line-height: 41px;
+  padding-right: 30px;
+  text-align: right;
+  background: var(--shade);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pink);
+}
+
+.thanks {
+  margin: 21px 0 0;
+  text-align: center;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--pink);
+}
+
+.thanks.end {
+  margin-top: 21px;
+}
+
+.divider {
+  margin: 23px 27px 0 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.items {
+  width: 656px;
+  margin-top: 12px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.items thead {
+  display: table-header-group;
+}
+
+.items tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.items th {
+  height: 31px;
+  padding: 11px 4px 4px;
+  background: var(--shade);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: left;
+  vertical-align: top;
+}
+
+.items td {
+  padding: 1.5px 4px 3.7px;
+  font-size: 9px;
+  line-height: 10.75px;
+  vertical-align: middle;
+}
+
+.items tbody tr:nth-child(even) td {
+  background: var(--shade);
+}
+
+.items .desc {
+  width: 433px;
+}
+
+.items .qty {
+  width: 33px;
+}
+
+.items .unit {
+  width: 78px;
+}
+
+.items .total {
+  width: 112px;
+}
+
+.items .num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.items td.num {
+  color: var(--muted);
+}
+
+.items .total {
+  padding-right: 30.5px;
+}
+
+.item-title {
+  font-weight: 700;
+  margin-bottom: 10.75px;
+}
+
+.task {
+  overflow-wrap: anywhere;
+}
