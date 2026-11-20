@@ -13,6 +13,7 @@ import { askArea, askDate, askText, askTime, unwrap } from "../ui/prompts.ts";
 import { c, padEnd, truncate } from "../ui/theme.ts";
 import { describeEntry } from "./log.ts";
 import { getCtx, rememberArea, type Ctx } from "./context.ts";
+import { gitCtxSession, pickFromGit } from "./git.ts";
 
 const ADD = "\0add";
 const TITLES = "\0titles";
@@ -95,10 +96,11 @@ async function entryFlow(ctx: Ctx, month: string, entry: Entry): Promise<void> {
 async function addFlow(ctx: Ctx, month: string): Promise<void> {
   const initial = month === currentMonth() ? undefined : dayjs(`${month}-01`).format("M/D/YYYY");
   const date = await askDate("Date", initial);
-  const time = await askTime("Time range or hours");
-  const { area } = await askArea(ctx.client.areas);
+  const pick = await pickFromGit(gitCtxSession(ctx), date);
+  const time = await askTime(`Time range or hours${pick?.span ? c.dim(`  (commits ${pick.span})`) : ""}`);
+  const { area } = await askArea(ctx.client.areas, pick?.area);
   rememberArea(ctx, area);
-  const task = await askText({ message: "What did you do?", required: true });
+  const task = await askText({ message: "What did you do?", initialValue: pick?.task, required: true });
   const saved = addEntry(ctx.key, { date, ...time, area, task });
   p.log.success(`Added  ${describeEntry(ctx, saved)}`);
 }

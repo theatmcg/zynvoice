@@ -9,6 +9,7 @@ import type { Entry } from "../lib/schema.ts";
 import { c } from "../ui/theme.ts";
 import { askArea, askDate, askText, askTime, unwrap } from "../ui/prompts.ts";
 import { getCtx, matchArea, rememberArea, type Ctx } from "./context.ts";
+import { gitCtxSession, pickFromGit, type GitPick } from "./git.ts";
 
 interface LogOpts {
   client?: string;
@@ -34,12 +35,17 @@ export async function logCommand(time: string | undefined, taskWords: string[], 
     if (!parsed) throw new ZynError(`Could not understand time "${time}". Try 1.5, 1h15m, 90m, or 10:30am-11:45am.`);
     const date = parseDate(opts.date);
     if (!date) throw new ZynError(`Could not understand date "${opts.date}".`);
-    const task = taskWords.join(" ").trim() || (await askText({ message: "What did you do?", required: true }));
+    let task = taskWords.join(" ").trim();
+    let pick: GitPick | null = null;
+    if (!task) {
+      pick = await pickFromGit(gitCtxSession(ctx), date);
+      task = await askText({ message: "What did you do?", initialValue: pick?.task, required: true });
+    }
     let area: string;
     if (opts.area) {
       area = matchArea(ctx.client.areas, opts.area);
     } else {
-      area = (await askArea(ctx.client.areas)).area;
+      area = (await askArea(ctx.client.areas, pick?.area)).area;
     }
     rememberArea(ctx, area);
     const entry = addEntry(ctx.key, { date, ...parsed, area, task });
@@ -52,13 +58,20 @@ export async function logCommand(time: string | undefined, taskWords: string[], 
   let lastDate: string | undefined;
   let lastArea: string | undefined;
   const logged: Entry[] = [];
+  const git = gitCtxSession(ctx);
 
   while (true) {
     const date = await askDate("Date", lastDate ? dayjs(lastDate).format("M/D") : undefined);
-    const parsed = await askTime("Time range or hours");
-    const { area } = await askArea(ctx.client.areas, lastArea);
+    const pick = await pickFromGit(git, date);
+    const parsed = await askTime(`Time range or hours${pick?.span ? c.dim(`  (commits ${pick.span})`) : ""}`);
+    const { area } = await askArea(ctx.client.areas, pick?.area ?? lastArea);
     rememberArea(ctx, area);
-    const task = await askText({ message: "What did you do?", required: true, placeholder: "Fixed quiz grading for incomplete answer keys (OLMS-260)" });
+    const task = await askText({
+      message: "What did you do?",
+      initialValue: pick?.task,
+      required: true,
+      placeholder: "Fixed quiz grading for incomplete answer keys (OLMS-260)",
+    });
 
     const entry = addEntry(ctx.key, { date, ...parsed, area, task });
     logged.push(entry);

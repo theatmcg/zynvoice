@@ -2,6 +2,7 @@ import * as p from "@clack/prompts";
 import { configExists, loadConfig, paths, saveConfig } from "../lib/store.ts";
 import { ConfigSchema, type Client, type Config, type Profile } from "../lib/schema.ts";
 import { askLines, askText, unwrap } from "../ui/prompts.ts";
+import { defaultOnfireGit } from "./git.ts";
 
 export const DEFAULT_SALARY = 6000;
 
@@ -34,7 +35,7 @@ export async function initCommand(opts: { yes?: boolean }): Promise<void> {
   if (opts.yes) {
     config.profiles.aiden ??= { name: "Aiden McGuire", address: [], paymentNotes: [] };
     config.profiles.onesource ??= ONESOURCE_PROFILE;
-    config.clients.onfire ??= DEFAULT_ONFIRE;
+    config.clients.onfire ??= { ...DEFAULT_ONFIRE, git: defaultOnfireGit() };
     config.defaultClient ??= "onfire";
     config.salary ??= DEFAULT_SALARY;
     saveConfig(config);
@@ -75,7 +76,15 @@ export async function initCommand(opts: { yes?: boolean }): Promise<void> {
 
   config.profiles.aiden = me;
   config.profiles.onesource ??= ONESOURCE_PROFILE;
-  config.clients.onfire = { ...base, profile: "aiden", rate: Number(rate), nextInvoiceNumber: Number(nextNumber), billTo };
+  config.clients.onfire = {
+    ...base,
+    profile: "aiden",
+    rate: Number(rate),
+    nextInvoiceNumber: Number(nextNumber),
+    billTo,
+    git: base.git ?? defaultOnfireGit(),
+  };
+  if (config.clients.onfire.git) p.log.info(`Git suggestions on: ${config.clients.onfire.git.repos.map((r) => r.path).join(", ")}`);
   config.defaultClient ??= "onfire";
 
   const ok = unwrap(await p.confirm({ message: `Save to ${paths.config()}?`, initialValue: true }));

@@ -15,6 +15,7 @@ import {
   clientUseCommand,
 } from "./commands/client.ts";
 import { profileAddCommand, profileEditCommand, profileListCommand } from "./commands/profile.ts";
+import { gitListCommand, gitSetupCommand } from "./commands/git.ts";
 
 process.stdout.on("error", (err: NodeJS.ErrnoException) => {
   if (err.code === "EPIPE") process.exit(0);
@@ -93,6 +94,20 @@ program
   .option("--html", "write an HTML preview instead of a PDF")
   .option("--no-open", "don't open the file when done")
   .action((month, opts) => invoiceCommand(month, { ...opts, client: clientOpt() }));
+
+const gitCmd = program.command("git").description("recent branches and commits from your repos");
+gitCmd
+  .command("list", { isDefault: true })
+  .alias("ls")
+  .description("your branches and commits, with days you haven't logged")
+  .option("--days <n>", "how far back to look", "14")
+  .option("--no-fetch", "skip git fetch")
+  .action((opts) => gitListCommand({ ...opts, client: clientOpt() }));
+gitCmd
+  .command("setup")
+  .description("choose repos, author emails, and folder-to-area rules")
+  .option("-y, --yes", "use the OnFire defaults (spark-lms)")
+  .action((opts) => gitSetupCommand({ ...opts, client: clientOpt() }));
 
 const client = program.command("client").description("clients you invoice (templates for billing other people)");
 client.command("list", { isDefault: true }).alias("ls").description("list clients").action(() => clientListCommand());
