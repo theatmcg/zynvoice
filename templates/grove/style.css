@@ -1,0 +1,278 @@
+/* Modern: a forest rail, a large title on the right, a color bar beside
+   who is billed, and the total inside a rounded sage card. */
+@page {
+  size: letter;
+  margin: 0;
+}
+
+:root {
+  --forest: #1b4332;
+  --leaf: #2d6a4f;
+  --sage: #e4efe8;
+  --paper: #f7f4ee;
+  --ink: #1c241f;
+  --muted: #5e6b63;
+  --body: #2a332d;
+  --rule: #ddd6cb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+}
+
+body {
+  font-family: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.page {
+  width: 8.5in;
+  min-height: 11in;
+  padding: 0.58in 0.68in 0.56in 0.78in;
+  background:
+    linear-gradient(90deg, var(--forest) 0 8px, var(--paper) 8px);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.sender-name {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--forest);
+}
+
+.quiet {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.identity {
+  flex: 0 0 auto;
+  text-align: right;
+}
+
+.word {
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  color: var(--forest);
+}
+
+.number {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.when {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bill {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 28px;
+  margin-top: 28px;
+}
+
+.bill-main {
+  padding-left: 14px;
+  border-left: 3px solid var(--leaf);
+}
+
+.bill-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.label {
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--leaf);
+}
+
+.label.second {
+  margin-top: 12px;
+}
+
+.who {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.items {
+  width: 100%;
+  margin-top: 28px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.items thead {
+  display: table-header-group;
+}
+
+.items tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.items th {
+  padding: 0 10px 8px;
+  border-bottom: 1px solid var(--forest);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--forest);
+}
+
+.items td {
+  padding: 14px 10px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--body);
+}
+
+.items .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.items th:nth-child(2),
+.items td:nth-child(2) {
+  width: 0.72in;
+}
+
+.items th:nth-child(3),
+.items td:nth-child(3) {
+  width: 0.95in;
+}
+
+.items th:nth-child(4),
+.items td:nth-child(4) {
+  width: 1.05in;
+}
+
+.amount {
+  font-weight: 650;
+  color: var(--forest);
+}
+
+.item-title {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.3;
+  color: var(--forest);
+}
+
+.area {
+  margin: 8px 0 3px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--leaf);
+}
+
+.task {
+  position: relative;
+  padding-left: 12px;
+  overflow-wrap: anywhere;
+}
+
+.task::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--leaf);
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 28px;
+  margin-top: 24px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.thanks {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--leaf);
+}
+
+.totals {
+  width: 250px;
+  flex: 0 0 auto;
+  padding: 14px 16px 12px;
+  background: var(--sage);
+  border-radius: 14px;
+}
+
+.line,
+.grand {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  padding: 3px 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.line span:last-child {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.grand {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(27, 67, 50, 0.18);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--forest);
+}

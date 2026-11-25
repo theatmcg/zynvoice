@@ -10,6 +10,7 @@
   "scripts": {
     "zyn": "tsx src/cli.ts",
     "sample": "tsx scripts/sample.ts",
+    "designs": "tsx scripts/designs.ts",
     "test": "node --import tsx --test test/*.test.ts",
     "typecheck": "tsc --noEmit"
   },

@@ -22,7 +22,7 @@ export const DEFAULT_ONFIRE: Client = {
   areas: ["spark-lms (Backend / Mobile Backend)", "spark-lms (Web Frontend)", "onfire-learning-app (Mobile)"],
   periodSplits: [10, 20],
   filePrefix: "OnFire-Learning",
-  template: "classic",
+  template: "ocean",
   nextInvoiceNumber: 54371,
   dueDays: null,
 };

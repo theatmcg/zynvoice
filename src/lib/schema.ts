@@ -37,7 +37,7 @@ export const ClientSchema = z.object({
   /** Last day of each period except the final one, e.g. [10, 20] -> 1-10, 11-20, 21-end. */
   periodSplits: z.array(z.number().int().min(1).max(30)).default([10, 20]),
   filePrefix: z.string().min(1),
-  template: z.string().default("classic"),
+  template: z.string().default("ocean"),
   nextInvoiceNumber: z.number().int().positive().default(1),
   /** Days after the invoice date the payment is due. Null prints "--". */
   dueDays: z.number().int().nonnegative().nullable().default(null),

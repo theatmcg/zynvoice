@@ -82,7 +82,7 @@ Set periods to `monthly` for a single line item per invoice.
 
 ## Templates
 
-Templates live in `templates/<name>/invoice.hbs` and `style.css`, using Handlebars. A folder with the same name in `~/.zynvoice/templates/` overrides the built-in one. To make a new design, copy `templates/classic`, edit it, and choose it with `zyn client edit`. `npm run sample -- <template>` renders the October reference invoice to `out/sample.pdf` so you can compare it with the original.
+Invoices use `ocean` unless a client picks another. The other built-in layouts are `classic` (the original OnFire invoice), `charcoal`, and `grove`. Each one is `templates/<name>/invoice.hbs` and `style.css`. A folder with the same name in `~/.zynvoice/templates/` overrides the built-in one. Choose one with `zyn client edit`. `npm run sample -- <template>` renders the October reference invoice to `out/sample.pdf`.
 
 ## Data
 

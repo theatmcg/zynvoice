@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{sender.name}} · Invoice {{number}}</title>
+<style>
+{{{fontCss}}}
+{{{css}}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="band">
+    <div class="sender">
+      <div class="sender-name">{{sender.name}}</div>
+      {{#each sender.address}}<div class="contact">{{this}}</div>{{/each}}
+      <div class="contact">
+        {{#if sender.phone}}{{sender.phone}}{{/if}}{{#if sender.email}}{{#if sender.phone}} · {{/if}}{{sender.email}}{{/if}}
+      </div>
+    </div>
+    <div class="identity">
+      <div class="kicker">Invoice</div>
+      <div class="number">{{number}}</div>
+    </div>
+  </header>
+  <div class="stripe"></div>
+
+  <div class="body">
+    <section class="strip">
+      <div><span>Issued</span><strong>{{dateLabel}}</strong></div>
+      <div><span>Due</span><strong>{{dueLabel}}</strong></div>
+      <div><span>Hours</span><strong>{{totals.qty}}</strong></div>
+    </section>
+
+    <section class="parties">
+      <div>
+        <div class="label">Invoice for</div>
+        {{#each billTo}}<div class="who">{{this}}</div>{{/each}}
+        {{#if project}}
+        <div class="label second">Project</div>
+        <div class="quiet">{{project}}</div>
+        {{/if}}
+      </div>
+      <div>
+        <div class="label">Payable to</div>
+        <div class="who">{{sender.name}}</div>
+        {{#each sender.paymentNotes}}<div class="quiet">{{this}}</div>{{/each}}
+      </div>
+    </section>
+
+    <table class="items">
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th class="num">Hours</th>
+          <th class="num">Rate</th>
+          <th class="num">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td>
+            <div class="item-title">{{title}}</div>
+            {{#each groups}}
+            <div class="area">{{area}}</div>
+            {{#each tasks}}<div class="task">{{this}}</div>{{/each}}
+            {{/each}}
+          </td>
+          <td class="num">{{qty}}</td>
+          <td class="num">{{unitPrice}}</td>
+          <td class="num amount">{{total}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <footer class="foot">
+      <p class="thanks">Thank you for your business.</p>
+      <div class="totals">
+        <div class="line"><span>Subtotal</span><span>{{totals.subtotal}}</span></div>
+        <div class="line"><span>Adjustments</span><span>{{totals.adjustments}}</span></div>
+        <div class="grand">
+          <span>Total</span>
+          <span>{{totals.total}}</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{sender.name}} · Invoice {{number}}</title>
+<style>
+{{{fontCss}}}
+{{{css}}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div class="sender">
+      <div class="sender-name">{{sender.name}}</div>
+      {{#each sender.address}}<div class="quiet">{{this}}</div>{{/each}}
+      {{#if sender.phone}}<div class="quiet">{{sender.phone}}</div>{{/if}}
+      {{#if sender.email}}<div class="quiet">{{sender.email}}</div>{{/if}}
+    </div>
+    <div class="identity">
+      <div class="word">Invoice</div>
+      <div class="number">No. {{number}}</div>
+      <div class="when">{{dateLabel}}</div>
+    </div>
+  </header>
+
+  <section class="bill">
+    <div class="bill-main">
+      <div class="label">Invoice for</div>
+      {{#each billTo}}<div class="who">{{this}}</div>{{/each}}
+      {{#if project}}
+      <div class="label second">Project</div>
+      <div class="quiet">{{project}}</div>
+      {{/if}}
+    </div>
+    <div class="bill-side">
+      <div>
+        <div class="label">Payable to</div>
+        <div class="who">{{sender.name}}</div>
+        {{#each sender.paymentNotes}}<div class="quiet">{{this}}</div>{{/each}}
+      </div>
+      <div>
+        <div class="label">Due</div>
+        <div class="who">{{dueLabel}}</div>
+      </div>
+    </div>
+  </section>
+
+  <table class="items">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="num">Hours</th>
+        <th class="num">Rate</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td>
+          <div class="item-title">{{title}}</div>
+          {{#each groups}}
+          <div class="area">{{area}}</div>
+          {{#each tasks}}<div class="task">{{this}}</div>{{/each}}
+          {{/each}}
+        </td>
+        <td class="num">{{qty}}</td>
+        <td class="num">{{unitPrice}}</td>
+        <td class="num amount">{{total}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <footer class="foot">
+    <p class="thanks">Thank you for your business.</p>
+    <div class="totals">
+      <div class="line"><span>Hours</span><span>{{totals.qty}}</span></div>
+      <div class="line"><span>Subtotal</span><span>{{totals.subtotal}}</span></div>
+      <div class="line"><span>Adjustments</span><span>{{totals.adjustments}}</span></div>
+      <div class="grand"><span>Total</span><span>{{totals.total}}</span></div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

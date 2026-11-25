@@ -55,8 +55,8 @@ async function clientWizard(config: Config, existing?: Client): Promise<Client> 
   const templates = listTemplates();
   const template =
     templates.length > 1
-      ? unwrap(await p.select({ message: "Template", initialValue: existing?.template ?? "classic", options: templates.map((t) => ({ value: t, label: t })) }))
-      : (templates[0] ?? "classic");
+      ? unwrap(await p.select({ message: "Template", initialValue: existing?.template ?? "ocean", options: templates.map((t) => ({ value: t, label: t })) }))
+      : (templates[0] ?? "ocean");
 
   const filePrefix = await askText({
     message: "PDF file name prefix",
